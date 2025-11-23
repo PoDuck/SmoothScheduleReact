@@ -136,3 +136,19 @@ export interface Ticket {
   status: TicketStatus;
   createdAt: Date;
 }
+
+// --- Auth Models ---
+
+export interface AuthResponse {
+  access: string;
+  refresh: string;
+  user: User;
+}
+
+export interface JWTPayload {
+  token_type: 'access' | 'refresh';
+  exp: number;
+  iat: number;
+  jti: string;
+  user_id: string;
+}

@@ -14,7 +14,8 @@
     "react": "^19.2.0",
     "react-router-dom": "^6.27.0",
     "recharts": "^2.13.0",
-    "@google/genai": "^1.30.0"
+    "@google/genai": "^1.30.0",
+    "axios": "1.6.2"
   },
   "devDependencies": {
     "@types/node": "^22.14.0",
