@@ -4,7 +4,6 @@ import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import { RESOURCES, APPOINTMENTS, BLOCKERS, SERVICES } from '../mockData';
 import { Appointment, Resource, User, Business, Blocker } from '../types';
-// FIX: Added 'Trash2' to the import from lucide-react.
 import { Clock, Calendar as CalendarIcon, Filter, GripVertical, CheckCircle2, Lock, Plus, X, ChevronLeft, ChevronRight, Ban, Trash2 } from 'lucide-react';
 
 // Time settings
@@ -45,7 +44,6 @@ const Scheduler: React.FC = () => {
   
   useEffect(() => { viewDate.setHours(0, 0, 0, 0); }, [viewDate]);
 
-  // FIX: Defined the missing handleResizeStart function.
   const handleResizeStart = (
     e: React.MouseEvent,
     appointment: Appointment,
@@ -226,7 +224,6 @@ const Scheduler: React.FC = () => {
                         
                         const colorClass = isAppointment ? getStatusColor(item.status, startTime, endTime) : 'bg-gray-100 border-gray-300 text-gray-500 dark:bg-gray-700 dark:border-gray-500 dark:text-gray-400';
                         const cursorClass = canDrag ? 'cursor-grab active:cursor-grabbing' : 'cursor-default';
-// FIX: Look up service name from serviceId.
                         const service = isAppointment ? SERVICES.find(s => s.id === (item as Appointment).serviceId) : null;
 
                         return (
@@ -243,7 +240,6 @@ const Scheduler: React.FC = () => {
                                   <span>{isAppointment ? (item as Appointment).customerName : item.title}</span>
                                   {isCompleted && <span title="Completed and locked"><Lock size={12} className="text-gray-400 shrink-0" /></span>}
                                 </div>
-                                {/* FIX: Property 'serviceName' does not exist on type 'Appointment'. Use looked-up service name. */}
                                 {isAppointment && <div className="text-xs truncate opacity-80">{service?.name}</div>}
                                 <div className="mt-2 flex items-center gap-1 text-xs opacity-75">
                                     {isAppointment && (item as Appointment).status === 'COMPLETED' ? <CheckCircle2 size={12} /> : isAppointment ? <Clock size={12} /> : <Ban size={12} />}
@@ -443,7 +439,6 @@ const Scheduler: React.FC = () => {
                     {pendingAppointments.length === 0 && !draggedAppointmentId && (<div className="text-xs text-gray-400 italic text-center py-4">No pending requests</div>)}
                     {draggedAppointmentId && (<div className="border-2 border-dashed border-blue-300 dark:border-blue-700 rounded-lg p-4 text-center mb-2 bg-blue-50 dark:bg-blue-900/30"><span className="text-sm text-blue-600 dark:text-blue-400 font-medium">Drop here to unassign</span></div>)}
                     {pendingAppointments.map(apt => {
-                        // FIX: Property 'serviceName' does not exist on type 'Appointment'. Use looked-up service name.
                         const service = SERVICES.find(s => s.id === apt.serviceId);
                         return (<div key={apt.id} className={`p-3 bg-white dark:bg-gray-700 border border-l-4 border-gray-200 dark:border-gray-600 border-l-orange-400 dark:border-l-orange-500 rounded shadow-sm cursor-grab active:cursor-grabbing hover:shadow-md transition-all ${draggedAppointmentId === apt.id ? 'opacity-50' : ''}`} draggable onDragStart={(e) => handleDragStart(e, apt.id)} onDragEnd={handleDragEnd}><p className="font-semibold text-sm text-gray-900 dark:text-white">{apt.customerName}</p><p className="text-xs text-gray-500 dark:text-gray-400">{service?.name}</p><div className="mt-2 flex items-center gap-1 text-xs text-gray-400 dark:text-gray-500"><Clock size={10} /> {apt.durationMinutes} min</div></div>)
                     })}
@@ -461,7 +456,6 @@ const Scheduler: React.FC = () => {
                         <div className="absolute inset-0 pointer-events-none">{timeMarkers.map(hour => (<div key={hour} className="absolute top-0 bottom-0 border-r border-dashed border-gray-100 dark:border-gray-800" style={{ left: (hour - START_HOUR) * 60 * (PIXELS_PER_MINUTE * zoomLevel) }}></div>))}</div>
                         {resourceLayouts.map(layout => (<div key={layout.resource.id} className="relative border-b border-gray-100 dark:border-gray-800 transition-colors" style={{ height: layout.height }}>{layout.appointments.map(apt => {
                             const isPreview = apt.id === 'PREVIEW'; const isDragged = apt.id === draggedAppointmentId; const startTime = new Date(apt.startTime); const endTime = new Date(startTime.getTime() + apt.durationMinutes * 60000); const colorClass = isPreview ? 'bg-brand-50 dark:bg-brand-900/30 border-brand-400 dark:border-brand-700 border-dashed text-brand-700 dark:text-brand-400 opacity-80' : getStatusColor(apt.status, startTime, endTime); const topOffset = (apt.laneIndex * (EVENT_HEIGHT + EVENT_GAP)) + EVENT_GAP;
-                            // FIX: Property 'serviceName' does not exist on type 'Appointment'. Use looked-up service name.
                             const service = SERVICES.find(s => s.id === apt.serviceId);
                             return (<div key={apt.id} className={`absolute rounded p-3 border-l-4 shadow-sm group overflow-hidden transition-all ${colorClass} ${isPreview ? 'z-40' : 'hover:shadow-md hover:z-50'} ${isDragged ? 'opacity-0 pointer-events-none' : ''}`} style={{ left: getOffset(startTime), width: getWidth(apt.durationMinutes), height: EVENT_HEIGHT, top: topOffset, zIndex: isPreview ? 40 : 10 + apt.laneIndex, cursor: resizeState ? 'grabbing' : 'grab', pointerEvents: isPreview ? 'none' : 'auto' }} draggable={!resizeState && !isPreview} onDragStart={(e) => handleDragStart(e, apt.id)} onDragEnd={handleDragEnd}>
                                 {!isPreview && (<><div className="absolute left-0 top-0 bottom-0 w-2 cursor-ew-resize opacity-0 group-hover:opacity-100 hover:bg-black/10 z-20" onMouseDown={(e) => handleResizeStart(e, apt, 'start')} /><div className="absolute right-0 top-0 bottom-0 w-2 cursor-ew-resize opacity-0 group-hover:opacity-100 hover:bg-black/10 z-20" onMouseDown={(e) => handleResizeStart(e, apt, 'end')} /></>)}

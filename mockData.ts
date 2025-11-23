@@ -1,43 +1,7 @@
 
-
 import { Appointment, Business, Resource, User, Metric, Customer, PlatformMetric, Ticket, Blocker, Service, WebsiteTemplate } from './types';
 
-export const TEMPLATES: WebsiteTemplate[] = [
-    {
-        id: 'template-default',
-        name: 'Standard Auto',
-        description: 'A clean, professional template for auto repair shops.',
-        html: `
-            <div class="hero">
-                <div class="container">
-                    <h1>{{hero_title}}</h1>
-                    <p>{{hero_subtitle}}</p>
-                    <a href="/portal/book" class="btn">Book Now</a>
-                </div>
-            </div>
-            <div class="about">
-                <div class="container">
-                    <h2>About Us</h2>
-                    <p>{{about_text}}</p>
-                </div>
-            </div>
-        `,
-        css: `
-            :root { --primary-color: #3B82F6; }
-            body { font-family: sans-serif; margin: 0; color: #333; }
-            .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
-            .hero { background-color: #f3f4f6; padding: 80px 0; text-align: center; }
-            .hero h1 { color: var(--primary-color); font-size: 3rem; margin-bottom: 20px; }
-            .hero p { font-size: 1.25rem; color: #666; margin-bottom: 30px; }
-            .btn { background-color: var(--primary-color); color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; }
-            .about { padding: 60px 0; }
-        `,
-        screenshots: {
-            desktop: 'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?auto=format&fit=crop&w=800&q=80',
-            mobile: 'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?auto=format&fit=crop&w=400&q=80'
-        }
-    }
-];
+// --- Business Data (Cleaned of Website Builder Props) ---
 
 export const CURRENT_BUSINESS: Business = {
   id: 'b1',
@@ -53,17 +17,19 @@ export const CURRENT_BUSINESS: Business = {
   requirePaymentMethodToBook: true,
   cancellationWindowHours: 24,
   lateCancellationFeePercent: 50,
-  websitePages: {
-      '/': { id: 'p1', name: 'Home', path: '/', isSystem: true },
-      '/about': { id: 'p2', name: 'About', path: '/about' }
-  },
-  activeTemplateId: 'template-default',
+  initialSetupComplete: true,
+  activeTemplateId: 'template-modern-1',
   websiteContent: {
-      hero_title: 'Welcome to Acme Auto Repair',
-      hero_subtitle: 'Quality service you can trust.',
-      about_text: 'We have been serving the community for over 20 years.'
+    hero_title: 'Expert Auto Care',
+    hero_subtitle: 'Professional maintenance and repair for all vehicle types.',
+    cta_text: 'Book Now',
+    about_paragraph: 'Acme Auto Repair has been serving the community since 2010 with honest, reliable service.'
   },
-  initialSetupComplete: true
+  websitePages: {
+    '/': { id: 'p1', name: 'Home', path: '/' },
+    '/services': { id: 'p2', name: 'Services', path: '/services' },
+    '/about': { id: 'p3', name: 'About', path: '/about' }
+  }
 };
 
 export const SECOND_BUSINESS: Business = {
@@ -403,4 +369,70 @@ export const PLATFORM_METRICS: PlatformMetric[] = [
   { label: 'Active Tenants', value: '1,240', change: '+12%', trend: 'up', color: 'green' },
   { label: 'Churn Rate', value: '2.4%', change: '-0.5%', trend: 'down', color: 'orange' },
   { label: 'Total API Requests', value: '45.2M', change: '+15%', trend: 'up', color: 'purple' },
+];
+
+export const TEMPLATES: WebsiteTemplate[] = [
+  {
+    id: 'template-modern-1',
+    name: 'Modern Mechanic',
+    description: 'A sleek, responsive template with a focus on mobile booking.',
+    html: `
+<header class="hero">
+  <div class="container">
+    <h1>{{hero_title}}</h1>
+    <p>{{hero_subtitle}}</p>
+    <a href="/book" class="btn">{{cta_text}}</a>
+  </div>
+</header>
+<section class="about">
+  <div class="container">
+    <h2>About Us</h2>
+    <p>{{about_paragraph}}</p>
+  </div>
+</section>
+    `,
+    css: `
+:root { --primary: var(--primary-color); }
+body { font-family: sans-serif; margin: 0; }
+.container { max-width: 1024px; margin: 0 auto; padding: 20px; }
+.hero { background: #111827; color: white; padding: 80px 20px; text-align: center; }
+.hero h1 { font-size: 3rem; margin-bottom: 1rem; color: var(--primary); }
+.btn { display: inline-block; background: var(--primary); color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold; margin-top: 20px; }
+.about { padding: 60px 20px; background: #f9fafb; text-align: center; }
+    `,
+    screenshots: {
+      desktop: 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=800&q=80',
+      mobile: 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=400&q=80'
+    }
+  },
+  {
+    id: 'template-classic-1',
+    name: 'Classic Garage',
+    description: 'A traditional layout that builds trust and highlights experience.',
+    html: `
+<div class="top-bar">Serving the community since 2010</div>
+<nav>
+  <h1>{{business_name}}</h1>
+</nav>
+<div class="banner">
+  <h2>{{hero_title}}</h2>
+  <a href="/book">{{cta_text}}</a>
+</div>
+<div class="content">
+  <p>{{about_paragraph}}</p>
+</div>
+    `,
+    css: `
+body { font-family: serif; }
+.top-bar { background: var(--primary-color); color: white; text-align: center; padding: 5px; font-size: 0.9rem; }
+nav { text-align: center; padding: 20px; border-bottom: 1px solid #ddd; }
+.banner { background: #eee; padding: 60px 20px; text-align: center; }
+.banner a { text-decoration: underline; color: var(--primary-color); font-weight: bold; }
+.content { padding: 40px 20px; max-width: 800px; margin: 0 auto; line-height: 1.6; }
+    `,
+    screenshots: {
+      desktop: 'https://images.unsplash.com/photo-1486006920555-c77dcf18193c?auto=format&fit=crop&w=800&q=80',
+      mobile: 'https://images.unsplash.com/photo-1486006920555-c77dcf18193c?auto=format&fit=crop&w=400&q=80'
+    }
+  }
 ];
