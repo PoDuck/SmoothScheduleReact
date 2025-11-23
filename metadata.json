@@ -1,0 +1,5 @@
+{
+  "name": "Smooth Schedule Platform",
+  "description": "A multi-tenant SaaS scheduling platform with custom timeline views, white-labeling, and dashboard analytics.",
+  "requestFramePermissions": []
+}
