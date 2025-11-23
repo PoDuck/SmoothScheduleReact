@@ -8,7 +8,7 @@ import {
   User as UserIcon,
   Home,
   Wrench,
-  LogIn
+  Eye
 } from 'lucide-react';
 
 const ResourceIcon: React.FC<{ type: ResourceType }> = ({ type }) => {
@@ -97,8 +97,12 @@ const Resources: React.FC<ResourcesProps> = ({ onMasquerade, effectiveUser }) =>
                     <td className="px-6 py-4 text-right">
                        <div className="flex items-center justify-end gap-2">
                         {canMasquerade && resourceUser && (
-                          <button onClick={() => onMasquerade(resourceUser)} className="p-2 text-gray-400 hover:text-brand-600 dark:hover:text-brand-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors" title={`Login As ${resource.name}`}>
-                            <LogIn size={16} />
+                          <button 
+                            onClick={() => onMasquerade(resourceUser)} 
+                            className="text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300 font-medium text-xs inline-flex items-center gap-1 px-3 py-1 border border-indigo-200 dark:border-indigo-800 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-900/30 transition-colors"
+                            title={`Login As ${resource.name}`}
+                          >
+                            <Eye size={14} /> Masquerade
                           </button>
                         )}
                         <button className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">

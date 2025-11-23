@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { ALL_BUSINESSES, CURRENT_USER } from '../../mockData';
-import { Search, Filter, MoreHorizontal, ExternalLink, ShieldCheck, Ban } from 'lucide-react';
+import { Search, Filter, MoreHorizontal, ShieldCheck, Ban, Eye } from 'lucide-react';
 import { User, Business } from '../../types';
 
 interface PlatformBusinessesProps {
@@ -106,11 +106,11 @@ const PlatformBusinesses: React.FC<PlatformBusinessesProps> = ({ onMasquerade })
                 <td className="px-6 py-4 text-right">
                   <button 
                     onClick={() => handleLoginAs(biz)}
-                    className="text-indigo-600 hover:text-indigo-500 font-medium text-xs mr-4 inline-flex items-center gap-1"
+                    className="text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300 font-medium text-xs inline-flex items-center gap-1 px-3 py-1 border border-indigo-200 dark:border-indigo-800 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-900/30 transition-colors"
                   >
-                    <ExternalLink size={12} /> Masquerade
+                    <Eye size={14} /> Masquerade
                   </button>
-                  <button className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
+                  <button className="ml-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
                     <MoreHorizontal size={18} />
                   </button>
                 </td>

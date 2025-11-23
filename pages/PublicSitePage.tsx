@@ -53,7 +53,7 @@ const PublicSitePage: React.FC<PublicSitePageProps> = ({ business, path }) => {
   let renderedHtml = activeTemplate.html;
   for (const [key, value] of Object.entries(business.websiteContent)) {
     const placeholder = new RegExp(`\\{\\{\\s*${key}\\s*\\}\\}`, 'g');
-    renderedHtml = renderedHtml.replace(placeholder, value);
+    renderedHtml = renderedHtml.replace(placeholder, String(value));
   }
   
   // Replace any leftover placeholders with empty strings

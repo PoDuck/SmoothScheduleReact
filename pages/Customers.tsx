@@ -1,5 +1,4 @@
 
-
 import React, { useState, useMemo } from 'react';
 import { CUSTOMERS, ALL_USERS } from '../mockData';
 import { Customer, User } from '../types';
@@ -12,7 +11,7 @@ import {
   Mail,
   Phone,
   X,
-  LogIn
+  Eye
 } from 'lucide-react';
 
 interface CustomersProps {
@@ -64,7 +63,6 @@ const Customers: React.FC<CustomersProps> = ({ onMasquerade, effectiveUser }) =>
       totalSpend: 0,
       lastVisit: null,
       status: 'Active',
-// FIX: Property 'paymentMethods' is missing. Added an empty array to satisfy the Customer type.
       paymentMethods: [],
       tags: formData.tags.split(',').map(t => t.trim()).filter(t => t.length > 0)
     };
@@ -185,8 +183,12 @@ const Customers: React.FC<CustomersProps> = ({ onMasquerade, effectiveUser }) =>
                     <td className="px-6 py-4 text-right">
                       <div className="flex items-center justify-end gap-2">
                         {canMasquerade && customerUser && (
-                          <button onClick={() => onMasquerade(customerUser)} className="p-2 text-gray-400 hover:text-brand-600 dark:hover:text-brand-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors" title="Login As Customer">
-                            <LogIn size={16} />
+                          <button 
+                            onClick={() => onMasquerade(customerUser)} 
+                            className="text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300 font-medium text-xs inline-flex items-center gap-1 px-3 py-1 border border-indigo-200 dark:border-indigo-800 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-900/30 transition-colors"
+                            title="Masquerade as User"
+                          >
+                            <Eye size={14} /> Masquerade
                           </button>
                         )}
                         <button className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
