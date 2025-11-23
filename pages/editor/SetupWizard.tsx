@@ -1,4 +1,5 @@
 
+
 import React, { useState } from 'react';
 import { useOutletContext, useNavigate } from 'react-router-dom';
 import { GoogleGenAI, Type } from "@google/genai";
@@ -88,7 +89,8 @@ const SetupWizard: React.FC = () => {
 
     // Extract initial content from the template's HTML placeholders
     const initialContent: Record<string, string> = {};
-    const placeholders = selectedTemplate.html.match(/\{\{\s*([^}]+)\s*\}\}/g) || [];
+    // FIX: Explicitly type the matches array to avoid type inference issues
+    const placeholders: string[] = selectedTemplate.html.match(/\{\{\s*([^}]+)\s*\}\}/g) || [];
     placeholders.forEach(p => {
         const key = p.replace(/[{}]/g, '').trim();
         // This is a simplification; a real implementation might parse default values

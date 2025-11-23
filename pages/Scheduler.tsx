@@ -22,7 +22,13 @@ const EVENT_GAP = 8;
 const Scheduler: React.FC = () => {
   const { user, business } = useOutletContext<{ user: User, business: Business }>();
 
+  // [TODO: API INTEGRATION]
+  // Fetch Appointments: GET /api/v1/appointments/?start_date={viewDate}&end_date={viewDate}
+  // This should ideally use React Query to manage caching and background updates.
   const [appointments, setAppointments] = useState<Appointment[]>(APPOINTMENTS);
+  
+  // [TODO: API INTEGRATION]
+  // Fetch Blockers: GET /api/v1/blockers/?date={viewDate}
   const [blockers, setBlockers] = useState<Blocker[]>(BLOCKERS);
   const [viewDate, setViewDate] = useState(new Date());
 
@@ -64,6 +70,9 @@ const Scheduler: React.FC = () => {
         const snappedMinutes = Math.round(minuteDelta / 15) * 15;
         if (snappedMinutes === 0 && resizeState.direction === 'end') return; 
 
+        // [TODO: API INTEGRATION]
+        // Optimistic UI Update: We update the state locally immediately.
+        // The actual API call happens on `handleMouseUp`.
         setAppointments(prev => prev.map(apt => {
             if (apt.id !== resizeState.appointmentId) return apt;
             let newStart = new Date(resizeState.originalStart);
@@ -79,7 +88,12 @@ const Scheduler: React.FC = () => {
             return { ...apt, startTime: newStart, durationMinutes: newDuration };
         }));
     };
+    
+    // [TODO: API INTEGRATION]
+    // Commit Resize: PATCH /api/v1/appointments/{resizeState.appointmentId}/
+    // Body: { duration_minutes: newDuration, start_time: newStart }
     const handleMouseUp = () => setResizeState(null);
+    
     window.addEventListener('mousemove', handleMouseMove);
     window.addEventListener('mouseup', handleMouseUp);
     return () => {
@@ -108,6 +122,8 @@ const Scheduler: React.FC = () => {
 
   // --- RESOURCE AGENDA VIEW ---
   if (user.role === 'resource') {
+    // [TODO: API INTEGRATION]
+    // Fetch Single Resource: GET /api/v1/resources/me/ or look up via user ID
     const myResource = useMemo(() => RESOURCES.find(r => r.userId === user.id), [user.id]);
     
     const isSameDay = (d1: Date, d2: Date) => d1.getFullYear() === d2.getFullYear() && d1.getMonth() === d2.getMonth() && d1.getDate() === d2.getDate();
@@ -137,7 +153,10 @@ const Scheduler: React.FC = () => {
       const snappedMinutes = Math.round(minutesFromStart / 15) * 15;
       const newStartTime = new Date(viewDate);
       newStartTime.setHours(START_HOUR, snappedMinutes, 0, 0);
-
+      
+      // [TODO: API INTEGRATION]
+      // Reschedule Appointment: PATCH /api/v1/appointments/{appointmentId}/
+      // Body: { start_time: newStartTime }
       setAppointments(prev => prev.map(apt => apt.id === appointmentId ? { ...apt, startTime: newStartTime } : apt));
     };
     
@@ -146,6 +165,9 @@ const Scheduler: React.FC = () => {
         const startTime = new Date(viewDate);
         startTime.setHours(hours, minutes, 0, 0);
         
+        // [TODO: API INTEGRATION]
+        // Create Blocker: POST /api/v1/blockers/
+        // Body: { resource_id: myResource.id, title: newBlocker.title, start_time: startTime, duration: ... }
         const newBlock: Blocker = {
             id: `block_${Date.now()}`,
             resourceId: myResource!.id,
@@ -219,7 +241,7 @@ const Scheduler: React.FC = () => {
                             >
                                 <div className="font-semibold text-sm truncate flex items-center justify-between">
                                   <span>{isAppointment ? (item as Appointment).customerName : item.title}</span>
-                                  {isCompleted && <Lock size={12} className="text-gray-400 shrink-0" title="Completed and locked"/>}
+                                  {isCompleted && <span title="Completed and locked"><Lock size={12} className="text-gray-400 shrink-0" /></span>}
                                 </div>
                                 {/* FIX: Property 'serviceName' does not exist on type 'Appointment'. Use looked-up service name. */}
                                 {isAppointment && <div className="text-xs truncate opacity-80">{service?.name}</div>}
@@ -254,6 +276,8 @@ const Scheduler: React.FC = () => {
 
   // --- OWNER/MANAGER/STAFF HORIZONTAL TIMELINE VIEW ---
   const resourceLayouts = useMemo(() => {
+    // [TODO: API INTEGRATION]
+    // Fetch Resources: GET /api/v1/resources/
     return RESOURCES.map(resource => {
       const allResourceApps = appointments.filter(a => a.resourceId === resource.id);
       const layoutApps = allResourceApps.filter(a => a.id !== draggedAppointmentId);
@@ -337,6 +361,9 @@ const Scheduler: React.FC = () => {
     e.preventDefault(); if (resizeState) return;
     const appointmentId = e.dataTransfer.getData('appointmentId');
     if (appointmentId && previewState) {
+        // [TODO: API INTEGRATION]
+        // Move Appointment: PATCH /api/v1/appointments/{appointmentId}/
+        // Body: { resource_id: previewState.resourceId, start_time: previewState.startTime }
         setAppointments(prev => prev.map(apt => apt.id === appointmentId ? { ...apt, startTime: previewState.startTime, resourceId: previewState.resourceId, status: apt.status === 'PENDING' ? 'CONFIRMED' : apt.status } : apt));
     }
     setDraggedAppointmentId(null); setPreviewState(null);
@@ -344,12 +371,17 @@ const Scheduler: React.FC = () => {
 
   const handleDropToPending = (e: React.DragEvent) => {
       e.preventDefault(); const appointmentId = e.dataTransfer.getData('appointmentId');
+      // [TODO: API INTEGRATION]
+      // Unassign Appointment: PATCH /api/v1/appointments/{appointmentId}/
+      // Body: { resource_id: null, status: 'PENDING' }
       if (appointmentId) setAppointments(prev => prev.map(apt => apt.id === appointmentId ? { ...apt, resourceId: null, status: 'PENDING' } : apt));
       setDraggedAppointmentId(null); setPreviewState(null);
   };
 
   const handleDropToArchive = (e: React.DragEvent) => {
       e.preventDefault(); const appointmentId = e.dataTransfer.getData('appointmentId');
+      // [TODO: API INTEGRATION]
+      // Delete/Archive Appointment: DELETE /api/v1/appointments/{appointmentId}/
       if (appointmentId) setAppointments(prev => prev.filter(apt => apt.id !== appointmentId));
       setDraggedAppointmentId(null); setPreviewState(null);
   };

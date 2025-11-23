@@ -1,4 +1,5 @@
 
+
 import React, { useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import { Business, User } from '../types';
@@ -19,6 +20,9 @@ const SettingsPage: React.FC = () => {
   };
 
   const handleSave = () => {
+    // [TODO: API INTEGRATION]
+    // Update Business Settings: PATCH /api/v1/business/{business.id}/
+    // Body: formState
     updateBusiness(formState);
     alert("Settings saved!");
   };

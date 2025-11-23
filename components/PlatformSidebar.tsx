@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Building2, MessageSquare, Settings, LogOut, Users } from 'lucide-react';
+import { LayoutDashboard, Building2, MessageSquare, Settings, LogOut, Users, Shield } from 'lucide-react';
 import { User } from '../types';
 import SmoothScheduleLogo from './SmoothScheduleLogo';
 
@@ -67,6 +67,10 @@ const PlatformSidebar: React.FC<PlatformSidebarProps> = ({ user, isCollapsed, to
         {isSuperuser && (
           <>
             <p className={`text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 mt-8 ${isCollapsed ? 'text-center' : 'px-3'}`}>{isCollapsed ? 'Sys' : 'System'}</p>
+            <Link to="/platform/staff" className={getNavClass('/platform/staff')} title="Platform Staff">
+              <Shield size={18} className="shrink-0" />
+              {!isCollapsed && <span>Platform Staff</span>}
+            </Link>
             <Link to="/platform/settings" className={getNavClass('/platform/settings')} title="Platform Settings">
               <Settings size={18} className="shrink-0" />
               {!isCollapsed && <span>Platform Settings</span>}

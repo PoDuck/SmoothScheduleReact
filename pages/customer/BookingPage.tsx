@@ -1,4 +1,5 @@
 
+
 import React, { useState } from 'react';
 import { useOutletContext, Link } from 'react-router-dom';
 import { User, Business, Service, Customer } from '../../types';
@@ -7,6 +8,8 @@ import { Check, ChevronLeft, Calendar, Clock, AlertTriangle, CreditCard } from '
 
 const BookingPage: React.FC = () => {
   const { user, business } = useOutletContext<{ user: User, business: Business }>();
+  // [TODO: API INTEGRATION]
+  // Fetch Customer Profile: GET /api/v1/customers/me/
   const customer = CUSTOMERS.find(c => c.userId === user.id);
   
   const [step, setStep] = useState(1);
@@ -14,7 +17,11 @@ const BookingPage: React.FC = () => {
   const [selectedTime, setSelectedTime] = useState<Date | null>(null);
   const [bookingConfirmed, setBookingConfirmed] = useState(false);
 
-  // Mock available times
+  // [TODO: API INTEGRATION]
+  // Critical: Availability calculation should happen on the backend.
+  // Endpoint: GET /api/v1/booking/availability/?service_id={service.id}&date={today}
+  // The backend will check resource schedules, blockers, and existing appointments
+  // to return valid slots.
   const availableTimes: Date[] = [
     new Date(new Date().setHours(9, 0, 0, 0)),
     new Date(new Date().setHours(10, 30, 0, 0)),
@@ -37,7 +44,9 @@ const BookingPage: React.FC = () => {
   };
   
   const handleConfirmBooking = () => {
-    // In a real app, this would send a request to the backend.
+    // [TODO: API INTEGRATION]
+    // Create Appointment: POST /api/v1/booking/
+    // Body: { service_id, start_time, customer_id }
     setBookingConfirmed(true);
     setStep(4);
   };
@@ -69,6 +78,7 @@ const BookingPage: React.FC = () => {
       case 1: // Select Service
         return (
           <div className="space-y-4">
+            {/* [TODO: API INTEGRATION] Fetch Services: GET /api/v1/services/ */}
             {SERVICES.map(service => (
               <button 
                 key={service.id} 

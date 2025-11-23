@@ -1,4 +1,5 @@
 
+
 import React, { useState, useMemo } from 'react';
 import { CUSTOMERS, ALL_USERS } from '../mockData';
 import { Customer, User } from '../types';
@@ -20,7 +21,11 @@ interface CustomersProps {
 }
 
 const Customers: React.FC<CustomersProps> = ({ onMasquerade, effectiveUser }) => {
+  // [TODO: API INTEGRATION]
+  // Fetch Customers: GET /api/v1/customers/?search={searchTerm}
+  // The backend should handle pagination and filtering.
   const [customersList, setCustomersList] = useState<Customer[]>(CUSTOMERS);
+  
   const [searchTerm, setSearchTerm] = useState('');
   const [sortConfig, setSortConfig] = useState<{ key: keyof Customer; direction: 'asc' | 'desc' }>({ 
     key: 'name', 
@@ -52,6 +57,9 @@ const Customers: React.FC<CustomersProps> = ({ onMasquerade, effectiveUser }) =>
   const handleAddCustomer = (e: React.FormEvent) => {
     e.preventDefault();
     
+    // [TODO: API INTEGRATION]
+    // Create Customer: POST /api/v1/customers/
+    // Body: { name, email, phone, ... }
     const newCustomer: Customer = {
       id: `c_${Date.now()}`,
       name: formData.name,
